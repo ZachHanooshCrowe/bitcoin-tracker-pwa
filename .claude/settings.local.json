@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m http.server:*)",
+      "Bash(npx http-server -p 8000)",
+      "Bash(timeout:*)",
+      "Bash(npx http-server -p 3000)",
+      "Bash(npx http-server -p 4000)",
+      "Bash(curl:*)",
+      "Bash(npx http-server:*)",
+      "Bash(node:*)",
+      "WebSearch",
+      "Bash(ipconfig:*)",
+      "Bash(findstr:*)",
+      "Bash(dir /b)",
+      "Bash(git init:*)",
+      "Bash(mkdir:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

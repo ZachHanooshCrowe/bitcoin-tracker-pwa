@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Bitcoin Tracker">
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="Track Bitcoin prices in real-time with live charts and market insights">
+    <title>Bitcoin Tracker - HODL or Fold?</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Install App Banner -->
+        <div id="installBanner" class="install-banner" style="display: none;">
+            <div class="install-content">
+                <span class="install-icon">📱</span>
+                <div class="install-text">
+                    <strong>Install Bitcoin Tracker</strong>
+                    <p>Add to your home screen for quick access!</p>
+                </div>
+                <button id="installBtn" class="install-btn-primary">Install</button>
+                <button id="dismissInstall" class="install-btn-dismiss">✕</button>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <header class="header">
+            <h1><span class="btc-symbol">₿</span> <span class="btc-symbol">₿</span>itcoin Central</h1>
+            <p class="tagline">Education Meets Comedy</p>
+            <div class="header-actions">
+                <button id="themeBtn" class="theme-btn" title="Change theme">🎨 Theme</button>
+                <button id="panicBtn" class="panic-btn" title="Need a break? Click for emergency calm mode">🚨 PANIC!</button>
+            </div>
+        </header>
+
+        <!-- Theme Selector Popup -->
+        <div id="themeSelector" class="theme-selector-popup">
+            <div class="theme-selector-content">
+                <h3>Choose Your Theme</h3>
+                <div class="theme-options">
+                    <button class="theme-option" data-theme="light">
+                        <span class="theme-icon">☀️</span>
+                        <span class="theme-name">Light</span>
+                    </button>
+                    <button class="theme-option" data-theme="dark">
+                        <span class="theme-icon">🌙</span>
+                        <span class="theme-name">Dark</span>
+                    </button>
+                    <button class="theme-option" data-theme="bitcoin">
+                        <span class="theme-icon">₿</span>
+                        <span class="theme-name">Bitcoin Gold</span>
+                    </button>
+                    <button class="theme-option" data-theme="matrix">
+                        <span class="theme-icon">💻</span>
+                        <span class="theme-name">Matrix</span>
+                    </button>
+                    <button class="theme-option" data-theme="lions">
+                        <span class="theme-icon">🦁</span>
+                        <span class="theme-name">Detroit Lions</span>
+                    </button>
+                    <button class="theme-option" data-theme="chicago">
+                        <span class="theme-icon">🌆</span>
+                        <span class="theme-name">Windy City</span>
+                    </button>
+                    <button class="theme-option" data-theme="msu">
+                        <span class="theme-icon spartan-helmet">
+                            <svg viewBox="0 0 100 100" width="60" height="60" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Helmet base -->
+                                <path d="M 50 15 Q 30 15 25 30 L 25 50 Q 25 70 35 75 L 35 85 L 45 85 L 45 75 Q 50 73 50 73 Q 50 73 55 75 L 55 85 L 65 85 L 65 75 Q 75 70 75 50 L 75 30 Q 70 15 50 15 Z" fill="#18453B" stroke="#0e2a23" stroke-width="2"/>
+
+                                <!-- Crest/Plume -->
+                                <path d="M 50 5 Q 48 10 47 15 L 50 15 L 53 15 Q 52 10 50 5 Z" fill="#18453B"/>
+                                <ellipse cx="50" cy="12" rx="3" ry="4" fill="#18453B"/>
+
+                                <!-- Face opening -->
+                                <rect x="35" y="40" width="30" height="25" rx="3" fill="#0e2a23" opacity="0.8"/>
+
+                                <!-- Eye slits -->
+                                <rect x="38" y="45" width="10" height="4" rx="1" fill="#18453B"/>
+                                <rect x="52" y="45" width="10" height="4" rx="1" fill="#18453B"/>
+
+                                <!-- Nose guard -->
+                                <line x1="50" y1="50" x2="50" y2="62" stroke="#0e2a23" stroke-width="3" stroke-linecap="round"/>
+
+                                <!-- Side details -->
+                                <path d="M 25 35 Q 20 40 20 50" stroke="#0e2a23" stroke-width="2" fill="none"/>
+                                <path d="M 75 35 Q 80 40 80 50" stroke="#0e2a23" stroke-width="2" fill="none"/>
+
+                                <!-- Chin guard -->
+                                <path d="M 35 65 Q 40 70 50 70 Q 60 70 65 65" stroke="#0e2a23" stroke-width="2" fill="none"/>
+                            </svg>
+                        </span>
+                        <span class="theme-name">Spartan Green</span>
+                    </button>
+                    <button class="theme-option" data-theme="umich">
+                        <span class="theme-icon">〽️</span>
+                        <span class="theme-name">Go Blue</span>
+                    </button>
+                </div>
+                <button id="closeThemeSelector" class="close-theme-btn">✕</button>
+            </div>
+        </div>
+
+        <!-- Panic Mode Overlay -->
+        <div id="panicOverlay" class="panic-overlay">
+            <div class="panic-content">
+                <div class="panic-emoji">🧘‍♂️</div>
+                <h2 class="panic-title">Take a Deep Breath</h2>
+                <p class="panic-message" id="panicMessage">Everything is going to be okay...</p>
+                <div class="panic-timer">
+                    <p>Cooling off period:</p>
+                    <div class="timer-display" id="panicTimer">30</div>
+                    <p class="timer-label">seconds remaining</p>
+                </div>
+                <button id="exitPanicBtn" class="exit-panic-btn" disabled>I'm Calm Now</button>
+            </div>
+        </div>
+
+        <!-- Emoji Rain Container -->
+        <div id="emojiRainContainer" class="emoji-rain-container"></div>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="dashboard">
+                <span class="tab-icon">💰</span>
+                <span class="tab-label">Price</span>
+            </button>
+            <button class="tab-btn" data-tab="advice">
+                <span class="tab-icon">📰</span>
+                <span class="tab-label">News</span>
+            </button>
+            <button class="tab-btn" data-tab="tools">
+                <span class="tab-icon">🛠️</span>
+                <span class="tab-label">Tools</span>
+            </button>
+            <button class="tab-btn" data-tab="charts">
+                <span class="tab-icon">💬</span>
+                <span class="tab-label">Social</span>
+            </button>
+            <button class="tab-btn" data-tab="whales">
+                <span class="tab-icon">🐋</span>
+                <span class="tab-label">Whales</span>
+            </button>
+            <button class="tab-btn" data-tab="education">
+                <span class="tab-icon">🎓</span>
+                <span class="tab-label">Learn</span>
+            </button>
+        </nav>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <!-- Demo Mode Banner -->
+            <div id="demoBanner" class="demo-banner" style="display: none;">
+                <span class="demo-icon">ℹ️</span>
+                <span class="demo-text">Demo Mode Active - Using simulated data. API connection issue detected.</span>
+            </div>
+
+            <!-- Main Price Display -->
+            <div class="main-price-section">
+                <div class="price-card primary">
+                    <div class="price-header">
+                        <h2><span class="btc-symbol">₿</span>itcoin Live Price</h2>
+                        <div class="header-buttons">
+                            <button id="soundToggle" class="sound-toggle-btn" title="Toggle sound effects">🔊 Sound</button>
+                            <button id="refreshBtn" class="refresh-btn">🔄 Refresh</button>
+                        </div>
+                    </div>
+
+                    <div class="price-display">
+                        <div class="current-price">
+                            <span class="currency">$</span>
+                            <span id="btcPrice" class="price-value">Loading...</span>
+                        </div>
+                        <div id="priceChange" class="price-change">
+                            <span id="changePercent">-</span>
+                            <span id="changeAmount"></span>
+                        </div>
+                        <div class="price-change-explanation">
+                            <span id="changeExplanation">Loading 24h change...</span>
+                        </div>
+                    </div>
+
+                    <div class="price-stats">
+                        <div class="stat">
+                            <span class="stat-label">24h High</span>
+                            <span id="high24h" class="stat-value">-</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">24h Low</span>
+                            <span id="low24h" class="stat-value">-</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Market Cap</span>
+                            <span id="marketCap" class="stat-value">-</span>
+                        </div>
+                    </div>
+
+                    <div class="last-updated">
+                        <span class="auto-refresh-indicator" id="autoRefreshIndicator">●</span>
+                        Last updated: <span id="lastUpdate">-</span>
+                        <span class="auto-refresh-text">(Auto-refreshes every minute)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Market Insights Section -->
+            <div class="insights-section">
+                <div class="insights-grid">
+                    <!-- Market Mood -->
+                    <div class="insight-card mood-card">
+                        <div class="emoji-display" id="moodEmoji">🤔</div>
+                        <h3 id="humorTitle">Market Mood</h3>
+                        <p id="humorMessage">Checking the vibes...</p>
+                        <div class="meme-image" id="memeContainer"></div>
+                    </div>
+
+                    <!-- Investor Sentiment -->
+                    <div class="insight-card sentiment-card">
+                        <h3>Investor Sentiment</h3>
+                        <div class="sentiment-meter">
+                            <div id="sentimentBar" class="sentiment-bar"></div>
+                        </div>
+                        <p id="sentimentLabel" class="sentiment-label">Neutral</p>
+                    </div>
+
+                    <!-- Cope Generator -->
+                    <div class="insight-card cope-card">
+                        <h3>💎 Cope Generator</h3>
+                        <p class="cope-subtitle">Need emotional support?</p>
+                        <button id="generateCopeBtn" class="generate-cope-btn">Generate Cope</button>
+                        <div class="cope-output">
+                            <div class="cope-emoji" id="copeEmoji">🤔</div>
+                            <p class="cope-message" id="copeMessage">Click above to generate a coping message!</p>
+                            <div class="cope-category" id="copeCategory"></div>
+                        </div>
+                        <div class="cope-stats">
+                            <p class="cope-counter">Copes Generated: <span id="copeCounter">0</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price Chart Section -->
+            <div class="chart-section">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h2>📈 Price History</h2>
+                        <div class="chart-timeframes">
+                            <button class="timeframe-btn active" data-days="1">24H</button>
+                            <button class="timeframe-btn" data-days="7">7D</button>
+                            <button class="timeframe-btn" data-days="30">30D</button>
+                            <button class="timeframe-btn" data-days="90">90D</button>
+                            <button class="timeframe-btn" data-days="365">1Y</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="priceChart"></canvas>
+                    </div>
+                    <div class="chart-info">
+                        <p id="chartAnnotation" class="chart-annotation">Loading chart...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price Alerts Section -->
+            <div class="alerts-section">
+                <div class="alerts-card coming-soon-card">
+                    <h2>🔔 Price Alerts</h2>
+                    <div class="coming-soon-content">
+                        <div class="coming-soon-icon">🚧</div>
+                        <h3>Coming Soon!</h3>
+                        <p class="coming-soon-description">
+                            Price alerts are currently under development. Soon you'll be able to set target prices
+                            and get notified when Bitcoin reaches them!
+                        </p>
+                        <div class="coming-soon-features">
+                            <div class="feature-item">✓ Custom price targets</div>
+                            <div class="feature-item">✓ Above/below notifications</div>
+                            <div class="feature-item">✓ Browser notifications</div>
+                            <div class="feature-item">✓ Multiple active alerts</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sentiment Tab -->
+        <div id="charts" class="tab-content">
+            <!-- Social Sentiment Tracker Section -->
+            <div class="sentiment-tracker-section">
+                <div class="sentiment-tracker-card">
+                    <div class="sentiment-tracker-header">
+                        <h2>💬 Social Sentiment Tracker</h2>
+                        <button id="refreshSentimentBtn" class="refresh-sentiment-btn">🔄 Refresh</button>
+                    </div>
+                    <p class="sentiment-tracker-description">Real-time sentiment analysis from social media. What's the crypto community saying?</p>
+
+                    <!-- Overall Sentiment Score -->
+                    <div class="overall-sentiment">
+                        <div class="sentiment-score-container">
+                            <div class="sentiment-icon" id="overallSentimentIcon">😐</div>
+                            <div class="sentiment-score-info">
+                                <h3>Overall Sentiment</h3>
+                                <div class="sentiment-score" id="overallSentimentScore">50</div>
+                                <div class="sentiment-label" id="overallSentimentLabel">Neutral</div>
+                            </div>
+                        </div>
+                        <div class="sentiment-breakdown">
+                            <div class="sentiment-stat bullish">
+                                <span class="stat-icon">🚀</span>
+                                <span class="stat-label">Bullish</span>
+                                <span class="stat-percent" id="bullishPercent">45%</span>
+                            </div>
+                            <div class="sentiment-stat neutral">
+                                <span class="stat-icon">😐</span>
+                                <span class="stat-label">Neutral</span>
+                                <span class="stat-percent" id="neutralPercent">35%</span>
+                            </div>
+                            <div class="sentiment-stat bearish">
+                                <span class="stat-icon">📉</span>
+                                <span class="stat-label">Bearish</span>
+                                <span class="stat-percent" id="bearishPercent">20%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sentiment by Platform -->
+                    <div class="platform-sentiment">
+                        <h3>Sentiment by Platform</h3>
+                        <div class="platform-grid" id="platformGrid">
+                            <p class="loading-sentiment">Loading platform data...</p>
+                        </div>
+                    </div>
+
+                    <!-- Trending Topics -->
+                    <div class="trending-topics">
+                        <h3>🔥 Trending Topics</h3>
+                        <div class="topics-container" id="trendingTopics">
+                            <p class="loading-sentiment">Loading trending topics...</p>
+                        </div>
+                    </div>
+
+                    <!-- Community Chat -->
+                    <div class="community-chat-section">
+                        <div class="chat-card">
+                            <div class="chat-header">
+                                <h3>💬 Community Chat</h3>
+                                <p class="chat-subtitle">Live discussion with Bitcoin enthusiasts</p>
+                                <div class="online-count">
+                                    <span class="online-dot"></span>
+                                    <span id="onlineCount">247</span> online
+                                </div>
+                            </div>
+
+                            <div class="chat-messages" id="chatMessages">
+                                <p class="chat-welcome">Welcome to Bitcoin Central chat! Messages will appear shortly...</p>
+                            </div>
+
+                            <div class="chat-input-container">
+                                <input type="text" id="chatInput" class="chat-input" placeholder="Type a message... (view-only demo)" disabled>
+                                <button class="chat-send-btn" disabled>Send</button>
+                            </div>
+
+                            <p class="chat-disclaimer">Note: This is a simulated chat for demonstration. Messages are auto-generated based on market sentiment.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools Tab -->
+        <div id="tools" class="tab-content">
+            <!-- DCA Calculator Section -->
+            <div class="dca-section">
+                <div class="dca-card">
+                    <h2>📊 DCA Calculator</h2>
+                    <p class="dca-description">Calculate your returns if you invested regularly (Dollar Cost Averaging) in <span class="btc-symbol">₿</span>itcoin</p>
+
+                    <div class="dca-inputs">
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="dcaAmount">Amount Per Purchase ($)</label>
+                                <input type="number" id="dcaAmount" class="dca-input" placeholder="100" min="1" value="100">
+                            </div>
+                            <div class="input-group">
+                                <label for="dcaFrequency">Frequency</label>
+                                <select id="dcaFrequency" class="dca-select">
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly" selected>Weekly</option>
+                                    <option value="biweekly">Bi-weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="dcaStartDate">Start Date</label>
+                                <input type="date" id="dcaStartDate" class="dca-input">
+                            </div>
+                            <div class="input-group">
+                                <label for="dcaEndDate">End Date (Leave blank for today)</label>
+                                <input type="date" id="dcaEndDate" class="dca-input">
+                            </div>
+                        </div>
+                        <button id="calculateDcaBtn" class="calculate-btn">Calculate DCA Returns</button>
+                    </div>
+
+                    <div class="dca-presets">
+                        <p class="presets-label">Quick Presets:</p>
+                        <div class="preset-buttons">
+                            <button class="preset-btn dca-preset" data-amount="50" data-freq="weekly" data-months="6">$50/week for 6mo</button>
+                            <button class="preset-btn dca-preset" data-amount="100" data-freq="weekly" data-months="12">$100/week for 1yr</button>
+                            <button class="preset-btn dca-preset" data-amount="100" data-freq="monthly" data-months="24">$100/mo for 2yr</button>
+                            <button class="preset-btn dca-preset" data-amount="500" data-freq="monthly" data-months="12">$500/mo for 1yr</button>
+                        </div>
+                    </div>
+
+                    <div id="dcaResults" class="dca-results" style="display: none;">
+                        <div class="results-grid">
+                            <div class="result-item">
+                                <span class="result-label">Total Invested</span>
+                                <span id="dcaTotalInvested" class="result-value">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Total <span class="btc-symbol">₿</span>TC Accumulated</span>
+                                <span id="dcaBtcAmount" class="result-value">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Current Value</span>
+                                <span id="dcaCurrentValue" class="result-value">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Total Return</span>
+                                <span id="dcaReturn" class="result-value">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Average Buy Price</span>
+                                <span id="dcaAvgPrice" class="result-value">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Number of Purchases</span>
+                                <span id="dcaPurchases" class="result-value">-</span>
+                            </div>
+                        </div>
+                        <div class="dca-commentary">
+                            <p id="dcaCommentary" class="commentary-text">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bitcoin Unit Converter Section -->
+            <div class="converter-section">
+                <div class="converter-card">
+                    <h2>🔄 <span class="btc-symbol">₿</span>itcoin Unit Converter</h2>
+                    <p class="converter-description">Convert between BTC, mBTC, Satoshis, and USD</p>
+
+                    <div class="converter-grid">
+                        <div class="converter-input-group">
+                            <label for="btcInput">BTC</label>
+                            <input type="number" id="btcInput" class="converter-input" placeholder="1.0" step="0.00000001">
+                        </div>
+                        <div class="converter-input-group">
+                            <label for="mbtcInput">mBTC (milliBitcoin)</label>
+                            <input type="number" id="mbtcInput" class="converter-input" placeholder="1000" step="0.001">
+                        </div>
+                        <div class="converter-input-group">
+                            <label for="satInput">Satoshis</label>
+                            <input type="number" id="satInput" class="converter-input" placeholder="100000000" step="1">
+                        </div>
+                        <div class="converter-input-group">
+                            <label for="usdInput">USD</label>
+                            <input type="number" id="usdInput" class="converter-input" placeholder="96000" step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="converter-info">
+                        <div class="info-item">
+                            <strong>1 BTC</strong> = 1,000 mBTC = 100,000,000 sats
+                        </div>
+                        <div class="info-item">
+                            <strong>Current BTC Price:</strong> <span id="converterPrice">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profit/Loss Calculator Section -->
+            <div class="pl-section">
+                <div class="pl-card">
+                    <h2>💹 Profit/Loss Calculator</h2>
+                    <p class="pl-description">Calculate your exact profit or loss from a <span class="btc-symbol">₿</span>itcoin trade</p>
+
+                    <div class="pl-inputs">
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="plBuyPrice">Buy Price ($)</label>
+                                <input type="number" id="plBuyPrice" class="pl-input" placeholder="50000" min="0.01" step="0.01">
+                            </div>
+                            <div class="input-group">
+                                <label for="plSellPrice">Sell Price ($)</label>
+                                <input type="number" id="plSellPrice" class="pl-input" placeholder="60000" min="0.01" step="0.01">
+                            </div>
+                        </div>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="plAmount">Amount (BTC)</label>
+                                <input type="number" id="plAmount" class="pl-input" placeholder="1.0" min="0.00000001" step="0.001" value="1">
+                            </div>
+                            <div class="input-group">
+                                <label for="plFees">Trading Fees (%)</label>
+                                <input type="number" id="plFees" class="pl-input" placeholder="0.5" min="0" max="100" step="0.1" value="0.5">
+                            </div>
+                        </div>
+                        <button id="calculatePlBtn" class="calculate-btn">Calculate P/L</button>
+                        <button id="useCurrentPlBtn" class="secondary-btn">Use Current Price as Sell Price</button>
+                    </div>
+
+                    <div id="plResults" class="pl-results" style="display: none;">
+                        <div class="results-grid">
+                            <div class="result-item">
+                                <span class="result-label">Purchase Cost</span>
+                                <span id="plPurchaseCost" class="result-value">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Sale Revenue</span>
+                                <span id="plSaleRevenue" class="result-value">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Trading Fees</span>
+                                <span id="plTotalFees" class="result-value">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Net Profit/Loss</span>
+                                <span id="plNetProfit" class="result-value">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">ROI</span>
+                                <span id="plRoi" class="result-value">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Price Change</span>
+                                <span id="plPriceChange" class="result-value">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- What If Calculator Section -->
+            <div class="whatif-section">
+                <div class="whatif-card">
+                    <h2>💰 What If Calculator</h2>
+                    <p class="whatif-description">Ever wonder "what if I bought <span class="btc-symbol">₿</span>itcoin back then?" Let's torture yourself with theoretical gains!</p>
+
+                    <div class="whatif-inputs">
+                        <div class="input-group">
+                            <label for="investAmount">Investment Amount ($)</label>
+                            <input type="number" id="investAmount" class="whatif-input" placeholder="1000" min="1" value="1000">
+                        </div>
+                        <div class="input-group">
+                            <label for="buyPrice"><span class="btc-symbol">₿</span>itcoin Price Then ($)</label>
+                            <input type="number" id="buyPrice" class="whatif-input" placeholder="10000" min="1" value="10000">
+                        </div>
+                        <button id="calculateBtn" class="calculate-btn">Calculate</button>
+                    </div>
+
+                    <div class="whatif-presets">
+                        <p class="presets-label">Or try these famous moments:</p>
+                        <div class="preset-buttons">
+                            <button class="preset-btn" data-price="0.08" data-date="May 2010">🍕 Pizza Day</button>
+                            <button class="preset-btn" data-price="1000" data-date="Jan 2017">$1K Milestone</button>
+                            <button class="preset-btn" data-price="19783" data-date="Dec 2017">2017 ATH</button>
+                            <button class="preset-btn" data-price="3800" data-date="Mar 2020">COVID Crash</button>
+                            <button class="preset-btn" data-price="69000" data-date="Nov 2021">2021 ATH</button>
+                            <button class="preset-btn" data-price="15500" data-date="Nov 2022">FTX Crash</button>
+                        </div>
+                    </div>
+
+                    <div id="whatifResults" class="whatif-results" style="display: none;">
+                        <div class="results-grid">
+                            <div class="result-item">
+                                <span class="result-label">You Would Have Bought</span>
+                                <span id="btcAmount" class="result-value">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Current Value</span>
+                                <span id="currentValue" class="result-value">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Profit/Loss</span>
+                                <span id="profitLoss" class="result-value">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">ROI</span>
+                                <span id="roi" class="result-value">-</span>
+                            </div>
+                        </div>
+                        <div class="whatif-commentary">
+                            <p id="whatifCommentary" class="commentary-text">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meme Generator Section -->
+            <div class="meme-section">
+                <div class="meme-card">
+                    <h2>🎨 <span class="btc-symbol">₿</span>itcoin Meme Generator</h2>
+                    <p class="meme-description">Create shareable <span class="btc-symbol">₿</span>itcoin memes to express your crypto emotions!</p>
+
+                    <div class="meme-generator">
+                        <div class="meme-controls">
+                            <div class="control-group">
+                                <label for="memeTemplate">Choose Template</label>
+                                <select id="memeTemplate" class="meme-select">
+                                    <option value="drake">Drake Meme</option>
+                                    <option value="buttons">Two Buttons</option>
+                                    <option value="distracted">Distracted Boyfriend</option>
+                                    <option value="brain">Expanding Brain</option>
+                                    <option value="stonks">Stonks</option>
+                                </select>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="topText">Top Text</label>
+                                <input type="text" id="topText" class="meme-input" placeholder="Enter top text..." maxlength="50">
+                            </div>
+
+                            <div class="control-group">
+                                <label for="bottomText">Bottom Text</label>
+                                <input type="text" id="bottomText" class="meme-input" placeholder="Enter bottom text..." maxlength="50">
+                            </div>
+
+                            <div class="meme-quick-fills">
+                                <p class="quick-fills-label">Quick Fill Ideas:</p>
+                                <div class="quick-fill-buttons">
+                                    <button class="quick-fill-btn" data-top="Checking portfolio once" data-bottom="Checking portfolio 47 times a day">Check Portfolio</button>
+                                    <button class="quick-fill-btn" data-top="When ₿itcoin dips" data-bottom="BUYING THE DIP">Buy Dip</button>
+                                    <button class="quick-fill-btn" data-top="Mom: Why are you sad?" data-bottom="Me: *stares at red candles*">Red Candles</button>
+                                    <button class="quick-fill-btn" data-top="Bought ₿itcoin at ATH" data-bottom="Still HODLing">HODL</button>
+                                </div>
+                            </div>
+
+                            <div class="meme-actions">
+                                <button id="generateMemeBtn" class="generate-btn">Generate Meme</button>
+                                <button id="downloadMemeBtn" class="download-btn" style="display: none;">💾 Download</button>
+                            </div>
+                        </div>
+
+                        <div class="meme-preview">
+                            <h3>Preview</h3>
+                            <div id="memeCanvas" class="meme-canvas-container">
+                                <p class="preview-placeholder">Select a template and add text to generate your meme!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Whales Tab -->
+        <div id="whales" class="tab-content">
+            <!-- Whale Watching Section -->
+            <div class="whale-section">
+                <div class="whale-card">
+                    <div class="whale-header">
+                        <h2>🐋 Whale Watching</h2>
+                        <button id="refreshWhalesBtn" class="refresh-whales-btn">🔄 Refresh</button>
+                    </div>
+                    <p class="whale-description">Track massive <span class="btc-symbol">₿</span>itcoin transactions as they happen. Are the whales accumulating or dumping?</p>
+
+                    <div class="whale-feed" id="whaleFeed">
+                        <p class="loading-whales">Loading whale activity...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Education Tab -->
+        <div id="education" class="tab-content">
+            <div class="education-section">
+                <h2><span class="btc-symbol">₿</span>itcoin <span class="btc-symbol">₿</span>asics</h2>
+
+                <!-- Bitcoin Trivia Quiz -->
+                <div class="trivia-card">
+                    <h3>🎯 <span class="btc-symbol">₿</span>itcoin Trivia Quiz</h3>
+                    <p class="trivia-description">Test your <span class="btc-symbol">₿</span>itcoin knowledge! How much do you really know?</p>
+
+                    <div id="triviaGame" class="trivia-game">
+                        <div class="trivia-header">
+                            <div class="trivia-progress">
+                                Question <span id="questionNumber">1</span> of <span id="totalQuestions">10</span>
+                            </div>
+                            <div class="trivia-score">
+                                Score: <span id="triviaScore">0</span>
+                            </div>
+                        </div>
+
+                        <div id="questionContainer" class="question-container">
+                            <h4 id="questionText" class="question-text">Loading question...</h4>
+                            <div id="answersContainer" class="answers-container">
+                                <!-- Answers will be inserted here -->
+                            </div>
+                        </div>
+
+                        <div id="feedbackContainer" class="feedback-container" style="display: none;">
+                            <div id="feedbackIcon" class="feedback-icon"></div>
+                            <p id="feedbackText" class="feedback-text"></p>
+                            <p id="funFact" class="fun-fact"></p>
+                            <button id="nextQuestionBtn" class="next-btn">Next Question →</button>
+                        </div>
+
+                        <div id="resultsContainer" class="results-container" style="display: none;">
+                            <div class="results-icon">🏆</div>
+                            <h3 id="resultsTitle" class="results-title"></h3>
+                            <p id="resultsMessage" class="results-message"></p>
+                            <div class="final-score">
+                                <span id="finalScore">0</span> / <span id="finalTotal">10</span>
+                            </div>
+                            <button id="restartQuizBtn" class="restart-btn">🔄 Try Again</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="edu-card">
+                    <h3>What is Bitcoin?</h3>
+                    <p>Bitcoin is a decentralized digital currency created in 2009 by an anonymous person (or group) using the pseudonym Satoshi Nakamoto. It operates without a central bank or single administrator, allowing peer-to-peer transactions on the blockchain network.</p>
+                    <ul>
+                        <li><strong>Decentralized:</strong> No single authority controls Bitcoin</li>
+                        <li><strong>Limited Supply:</strong> Only 21 million Bitcoin will ever exist</li>
+                        <li><strong>Transparent:</strong> All transactions are recorded on a public ledger</li>
+                        <li><strong>Pseudonymous:</strong> Transactions are linked to wallet addresses, not identities</li>
+                    </ul>
+                </div>
+
+                <div class="edu-card">
+                    <h3>How Does Blockchain Work?</h3>
+                    <p>The blockchain is a distributed ledger technology that records all Bitcoin transactions. Think of it as a digital notebook that everyone can see, but no one can erase or forge.</p>
+                    <ol>
+                        <li><strong>Transaction Initiation:</strong> Someone sends Bitcoin to another wallet</li>
+                        <li><strong>Broadcasting:</strong> The transaction is broadcast to the network</li>
+                        <li><strong>Validation:</strong> Miners verify the transaction using complex cryptography</li>
+                        <li><strong>Block Creation:</strong> Valid transactions are grouped into a "block"</li>
+                        <li><strong>Adding to Chain:</strong> The block is added to the existing blockchain</li>
+                        <li><strong>Confirmation:</strong> The transaction is now permanent and irreversible</li>
+                    </ol>
+                </div>
+
+                <div class="edu-card">
+                    <h3>Why Do People Invest in Bitcoin?</h3>
+                    <ul>
+                        <li><strong>Store of Value:</strong> Some view Bitcoin as "digital gold"</li>
+                        <li><strong>Hedge Against Inflation:</strong> Limited supply makes it potentially inflation-resistant</li>
+                        <li><strong>Decentralization:</strong> Not controlled by governments or banks</li>
+                        <li><strong>Portfolio Diversification:</strong> Adds an alternative asset class</li>
+                        <li><strong>Speculation:</strong> Price volatility creates opportunities for gains (and losses!)</li>
+                        <li><strong>Technology Belief:</strong> Faith in blockchain's future potential</li>
+                    </ul>
+                </div>
+
+                <div class="edu-card warning-card">
+                    <h3>⚠️ Important Warnings</h3>
+                    <ul>
+                        <li>Bitcoin is extremely volatile - prices can swing 20%+ in a day</li>
+                        <li>Only invest what you can afford to lose</li>
+                        <li>Past performance doesn't guarantee future results</li>
+                        <li>Not FDIC insured - if you lose your keys, you lose your Bitcoin</li>
+                        <li>Regulatory landscape is still evolving</li>
+                        <li>Many scams exist - be extremely cautious</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trading Strategies Tab -->
+        <div id="strategies" class="tab-content">
+            <div class="education-section">
+                <h2>Trading Strategies & Tips</h2>
+
+                <div class="edu-card">
+                    <h3>1. HODL Strategy (Buy & Hold)</h3>
+                    <p><strong>What it is:</strong> Buy Bitcoin and hold it for the long term, ignoring short-term price fluctuations.</p>
+                    <p><strong>Pros:</strong> Simple, less stressful, historically profitable over long periods, no need to time the market</p>
+                    <p><strong>Cons:</strong> Requires patience, misses short-term trading opportunities, can be difficult during bear markets</p>
+                    <p><strong>Best for:</strong> Long-term believers in Bitcoin who want passive investing</p>
+                </div>
+
+                <div class="edu-card">
+                    <h3>2. Dollar-Cost Averaging (DCA)</h3>
+                    <p><strong>What it is:</strong> Invest a fixed amount of money at regular intervals (e.g., $100 every week) regardless of price.</p>
+                    <p><strong>Pros:</strong> Reduces impact of volatility, removes emotional decision-making, builds discipline</p>
+                    <p><strong>Cons:</strong> May miss optimal entry points, can be less profitable in sustained uptrends</p>
+                    <p><strong>Best for:</strong> Beginners who want to build a position over time without timing the market</p>
+                </div>
+
+                <div class="edu-card">
+                    <h3>3. Swing Trading</h3>
+                    <p><strong>What it is:</strong> Buy during dips and sell during peaks over days to weeks.</p>
+                    <p><strong>Pros:</strong> Potential for higher returns than HODLing, takes advantage of volatility</p>
+                    <p><strong>Cons:</strong> Requires market analysis skills, more time-intensive, higher tax implications, emotional stress</p>
+                    <p><strong>Best for:</strong> Experienced traders comfortable with technical analysis and risk</p>
+                </div>
+
+                <div class="edu-card">
+                    <h3>4. Risk Management Rules</h3>
+                    <ul>
+                        <li><strong>The 1-5% Rule:</strong> Only allocate 1-5% of your portfolio to Bitcoin initially</li>
+                        <li><strong>Never Invest Borrowed Money:</strong> Don't use credit cards or loans to buy crypto</li>
+                        <li><strong>Set Stop Losses:</strong> Decide in advance at what price you'll sell to limit losses</li>
+                        <li><strong>Take Profits:</strong> Consider selling portions when you hit profit targets</li>
+                        <li><strong>Diversify:</strong> Don't put all eggs in one basket, even within crypto</li>
+                        <li><strong>Keep Emergency Fund:</strong> Have 3-6 months expenses saved before investing</li>
+                    </ul>
+                </div>
+
+                <div class="edu-card">
+                    <h3>5. Common Mistakes to Avoid</h3>
+                    <ul>
+                        <li>❌ <strong>FOMO Buying:</strong> Buying at peak prices due to fear of missing out</li>
+                        <li>❌ <strong>Panic Selling:</strong> Selling at a loss during market dips</li>
+                        <li>❌ <strong>No Research:</strong> Investing without understanding what you're buying</li>
+                        <li>❌ <strong>Following Hype:</strong> Making decisions based on social media or influencers</li>
+                        <li>❌ <strong>Over-Trading:</strong> Making too many trades, increasing fees and taxes</li>
+                        <li>❌ <strong>Ignoring Security:</strong> Not using secure wallets or exchanges</li>
+                        <li>❌ <strong>Checking Too Often:</strong> Obsessively watching prices causes stress and bad decisions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Analysis Tab -->
+        <div id="analysis" class="tab-content">
+            <div class="education-section">
+                <h2>Technical Analysis Basics</h2>
+
+                <div class="edu-card">
+                    <h3>What is Technical Analysis?</h3>
+                    <p>Technical analysis is the study of past market data (primarily price and volume) to forecast future price movements. Unlike fundamental analysis, it focuses solely on chart patterns and statistical trends.</p>
+                </div>
+
+                <div class="edu-card">
+                    <h3>Key Concepts</h3>
+
+                    <h4>1. Support and Resistance</h4>
+                    <p><strong>Support:</strong> A price level where buying pressure typically prevents the price from falling further (floor)</p>
+                    <p><strong>Resistance:</strong> A price level where selling pressure typically prevents the price from rising further (ceiling)</p>
+                    <p><strong>Trading Strategy:</strong> Buy near support, sell near resistance. When broken, support becomes resistance and vice versa.</p>
+                </div>
+
+                <div class="edu-card">
+                    <h3>2. Moving Averages (MA)</h3>
+                    <p><strong>What they are:</strong> Average price over a specific time period that smooths out price fluctuations</p>
+                    <ul>
+                        <li><strong>50-day MA:</strong> Medium-term trend indicator</li>
+                        <li><strong>200-day MA:</strong> Long-term trend indicator</li>
+                        <li><strong>Golden Cross:</strong> When 50-day MA crosses above 200-day MA (bullish signal)</li>
+                        <li><strong>Death Cross:</strong> When 50-day MA crosses below 200-day MA (bearish signal)</li>
+                    </ul>
+                </div>
+
+                <div class="edu-card">
+                    <h3>3. Relative Strength Index (RSI)</h3>
+                    <p>RSI measures momentum on a scale of 0-100:</p>
+                    <ul>
+                        <li><strong>RSI > 70:</strong> Overbought - potential sell signal</li>
+                        <li><strong>RSI < 30:</strong> Oversold - potential buy signal</li>
+                        <li><strong>RSI 30-70:</strong> Neutral territory</li>
+                    </ul>
+                    <p><em>Note: In strong trends, RSI can stay overbought/oversold for extended periods</em></p>
+                </div>
+
+                <div class="edu-card">
+                    <h3>4. Chart Patterns</h3>
+
+                    <h4>Bullish Patterns (Price likely to go up):</h4>
+                    <ul>
+                        <li><strong>Bull Flag:</strong> Sharp rise followed by slight consolidation</li>
+                        <li><strong>Cup and Handle:</strong> U-shaped recovery with a small dip</li>
+                        <li><strong>Ascending Triangle:</strong> Higher lows with flat resistance</li>
+                    </ul>
+
+                    <h4>Bearish Patterns (Price likely to go down):</h4>
+                    <ul>
+                        <li><strong>Bear Flag:</strong> Sharp decline followed by slight consolidation</li>
+                        <li><strong>Head and Shoulders:</strong> Peak, higher peak, lower peak</li>
+                        <li><strong>Descending Triangle:</strong> Lower highs with flat support</li>
+                    </ul>
+                </div>
+
+                <div class="edu-card">
+                    <h3>5. Volume Analysis</h3>
+                    <p>Trading volume confirms price movements:</p>
+                    <ul>
+                        <li><strong>Price up + High volume:</strong> Strong bullish signal</li>
+                        <li><strong>Price up + Low volume:</strong> Weak move, may reverse</li>
+                        <li><strong>Price down + High volume:</strong> Strong bearish signal</li>
+                        <li><strong>Price down + Low volume:</strong> Weak move, may reverse</li>
+                    </ul>
+                </div>
+
+                <div class="edu-card warning-card">
+                    <h3>⚠️ Technical Analysis Limitations</h3>
+                    <ul>
+                        <li>Not foolproof - no indicator is 100% accurate</li>
+                        <li>Self-fulfilling prophecy - patterns work because everyone uses them</li>
+                        <li>Lagging indicators - based on past data, not future events</li>
+                        <li>News can override technical signals instantly</li>
+                        <li>Works better with higher liquidity and longer timeframes</li>
+                        <li>Requires practice and experience to use effectively</li>
+                    </ul>
+                    <p><strong>Bottom line:</strong> Use technical analysis as one tool among many, not as the sole basis for decisions.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advice Tab -->
+        <div id="advice" class="tab-content">
+            <div class="advice-section">
+                <h2>📰 Crypto News & Advice</h2>
+                <p class="advice-intro">Stay informed with trusted crypto news sources and make better investment decisions.</p>
+
+                <!-- News Sources Grid -->
+                <div class="news-sources-grid">
+                    <div class="news-source-card">
+                        <div class="news-source-header">
+                            <span class="news-icon">📊</span>
+                            <h3>CoinDesk</h3>
+                        </div>
+                        <p class="news-description">Leading news site for Bitcoin and cryptocurrency information, analysis, and trends.</p>
+                        <a href="https://www.coindesk.com/" target="_blank" rel="noopener noreferrer" class="news-link">Visit CoinDesk →</a>
+                    </div>
+
+                    <div class="news-source-card">
+                        <div class="news-source-header">
+                            <span class="news-icon">🔗</span>
+                            <h3>Cointelegraph</h3>
+                        </div>
+                        <p class="news-description">Breaking news, market analysis, and blockchain technology insights.</p>
+                        <a href="https://cointelegraph.com/" target="_blank" rel="noopener noreferrer" class="news-link">Visit Cointelegraph →</a>
+                    </div>
+
+                    <div class="news-source-card">
+                        <div class="news-source-header">
+                            <span class="news-icon">💼</span>
+                            <h3>CoinMarketCap</h3>
+                        </div>
+                        <p class="news-description">Real-time crypto prices, market cap rankings, and latest news updates.</p>
+                        <a href="https://coinmarketcap.com/headlines/news/" target="_blank" rel="noopener noreferrer" class="news-link">Visit CoinMarketCap News →</a>
+                    </div>
+
+                    <div class="news-source-card">
+                        <div class="news-source-header">
+                            <span class="news-icon">📈</span>
+                            <h3>CryptoSlate</h3>
+                        </div>
+                        <p class="news-description">In-depth analysis, research, and news on cryptocurrencies and blockchain.</p>
+                        <a href="https://cryptoslate.com/" target="_blank" rel="noopener noreferrer" class="news-link">Visit CryptoSlate →</a>
+                    </div>
+
+                    <div class="news-source-card">
+                        <div class="news-source-header">
+                            <span class="news-icon">🎯</span>
+                            <h3>The Block</h3>
+                        </div>
+                        <p class="news-description">Professional-grade crypto research, data, and investigative journalism.</p>
+                        <a href="https://www.theblock.co/" target="_blank" rel="noopener noreferrer" class="news-link">Visit The Block →</a>
+                    </div>
+
+                    <div class="news-source-card">
+                        <div class="news-source-header">
+                            <span class="news-icon">🔐</span>
+                            <h3>Bitcoin Magazine</h3>
+                        </div>
+                        <p class="news-description">The oldest and most established source for Bitcoin news and culture.</p>
+                        <a href="https://bitcoinmagazine.com/" target="_blank" rel="noopener noreferrer" class="news-link">Visit Bitcoin Magazine →</a>
+                    </div>
+                </div>
+
+                <!-- Investment Advice Section -->
+                <div class="advice-card">
+                    <h3>💡 Smart Investment Tips</h3>
+                    <div class="advice-tips">
+                        <div class="tip-item">
+                            <span class="tip-icon">✅</span>
+                            <div class="tip-content">
+                                <h4>Do Your Own Research (DYOR)</h4>
+                                <p>Never invest based solely on social media hype. Read multiple sources, understand the technology, and verify claims.</p>
+                            </div>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">💰</span>
+                            <div class="tip-content">
+                                <h4>Only Invest What You Can Afford to Lose</h4>
+                                <p>Cryptocurrency is highly volatile. Never invest money you need for bills, emergencies, or essential expenses.</p>
+                            </div>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">📊</span>
+                            <div class="tip-content">
+                                <h4>Diversify Your Portfolio</h4>
+                                <p>Don't put all your eggs in one basket. Consider spreading investments across different assets and cryptocurrencies.</p>
+                            </div>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">🎯</span>
+                            <div class="tip-content">
+                                <h4>Have a Long-Term Strategy</h4>
+                                <p>Avoid emotional trading. Set clear goals, time horizons, and stick to your investment plan.</p>
+                            </div>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">🔒</span>
+                            <div class="tip-content">
+                                <h4>Secure Your Assets</h4>
+                                <p>Use hardware wallets for long-term holdings, enable 2FA, and never share your private keys with anyone.</p>
+                            </div>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">⚠️</span>
+                            <div class="tip-content">
+                                <h4>Beware of Scams</h4>
+                                <p>If it sounds too good to be true, it probably is. Avoid "guaranteed returns" and unverified investment schemes.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Red Flags Warning -->
+                <div class="advice-card warning-card">
+                    <h3>🚨 Red Flags to Watch For</h3>
+                    <ul class="red-flags-list">
+                        <li><strong>Guaranteed returns:</strong> No legitimate investment can guarantee profits</li>
+                        <li><strong>Pressure to invest quickly:</strong> Scammers create artificial urgency</li>
+                        <li><strong>Unregistered investment opportunities:</strong> Check if they're registered with regulators</li>
+                        <li><strong>Overly complex strategies:</strong> If you don't understand it, don't invest in it</li>
+                        <li><strong>Requests for private keys or seed phrases:</strong> Never share these with anyone</li>
+                        <li><strong>Promises of insider information:</strong> This is often illegal and usually fake</li>
+                        <li><strong>Celebrity endorsements:</strong> Many are paid promotions, not genuine recommendations</li>
+                    </ul>
+                </div>
+
+                <!-- Disclaimer -->
+                <div class="advice-disclaimer">
+                    <p><strong>⚠️ Important Disclaimer:</strong> This information is for educational purposes only and should not be considered financial advice. Always consult with a qualified financial advisor before making investment decisions. Past performance does not guarantee future results.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>⚠️ This app is for educational and entertainment purposes only. Not financial advice.</p>
+            <p>Data provided by CoinGecko API</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

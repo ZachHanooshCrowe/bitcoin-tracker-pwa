@@ -1,0 +1,22 @@
+{
+  "name": "bitcoin-tracker-pwa",
+  "version": "1.0.0",
+  "description": "Bitcoin Tracker - HODL or Fold? A Progressive Web App for tracking Bitcoin prices",
+  "main": "app.js",
+  "scripts": {
+    "dev": "npx http-server -p 3002 --cors -c-1",
+    "proxy": "node proxy-server.js"
+  },
+  "keywords": [
+    "bitcoin",
+    "cryptocurrency",
+    "pwa",
+    "tracker",
+    "price"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.x"
+  }
+}
