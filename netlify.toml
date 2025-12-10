@@ -1,0 +1,20 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/bitcoin"
+  to = "/.netlify/functions/bitcoin"
+  status = 200
+
+[[redirects]]
+  from = "/api/chart"
+  to = "/.netlify/functions/chart"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type"

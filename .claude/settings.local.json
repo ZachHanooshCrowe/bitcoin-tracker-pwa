@@ -15,7 +15,18 @@
       "Bash(dir /b)",
       "Bash(git init:*)",
       "Bash(mkdir:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nPrepare Bitcoin Tracker PWA for Vercel deployment\n\n- Convert proxy-server.js to Vercel serverless functions (api/bitcoin.js, api/chart.js)\n- Update app.js API configuration to auto-detect production vs development\n- Add vercel.json configuration for serverless function routing\n- Create package.json for Node.js dependencies\n- Add .gitignore for clean repository\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(vercel --version:*)",
+      "Bash(npm install:*)",
+      "Bash(vercel:*)",
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(gh --version:*)",
+      "Bash(export NODE_TLS_REJECT_UNAUTHORIZED=0)",
+      "Bash(npx vercel:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
