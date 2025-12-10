@@ -69,7 +69,7 @@ The app includes 8 beautiful themes:
 3. **Bitcoin Orange** ₿ - Classic Bitcoin colors
 4. **Matrix Green** 🟢 - Hacker aesthetic
 5. **Detroit Lions** 🦁 - Honolulu Blue and Silver
-6. **Windy City** 🌆 - Chicago Navy and Red
+6. **Windy City (J)** 🌆 - Chicago Navy and Red
 7. **Spartan Green** 🎓 - Michigan State University colors with custom Spartan helmet
 8. **Go Blue** 〽️ - University of Michigan Maize and Blue
 

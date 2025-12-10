@@ -68,7 +68,7 @@ Added three powerful new calculators:
 
 ### 3. Four New Themes
 - Detroit Lions (Honolulu Blue & Silver) 🦁
-- Chicago/Windy City (Navy & Red) 🌆
+- Chicago/Windy City (J) (Navy & Red) 🌆
 - MSU Spartan Green (with custom helmet SVG) 🎓
 - U of M Go Blue (Maize & Blue) 〽️
 
@@ -121,7 +121,7 @@ bitcoin-app/
 3. Bitcoin Orange ₿
 4. Matrix Green 🟢
 5. Detroit Lions 🦁
-6. Windy City 🌆
+6. Windy City (J) 🌆
 7. Spartan Green 🎓
 8. Go Blue 〽️
 
